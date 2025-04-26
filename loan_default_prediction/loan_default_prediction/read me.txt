@@ -1,0 +1,10 @@
+# Loan Default Prediction Web App
+
+## How to run:
+Open Git Bash or Terminal inside the loan_default_prediction/ directory.
+
+Run:
+1. pip install -r requirements.txt
+2. python server.py
+
+Then open http://127.0.0.1:5000 in your browser

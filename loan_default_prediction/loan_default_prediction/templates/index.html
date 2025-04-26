@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Default Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Default Prediction</h1>
+
+        <form onsubmit="event.preventDefault(); predictLoanDefault();">
+            <label for="sex">Sex:</label>
+            <select id="sex" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <label for="housing">Housing:</label>
+            <select id="housing" required>
+                <option value="">Select</option>
+                <option value="own">Own</option>
+                <option value="free">Free</option>
+                <option value="rent">Rent</option>
+            </select>
+
+            <label for="savingAccounts">Saving Accounts:</label>
+            <select id="savingAccounts" required>
+                <option value="">Select</option>
+                <option value="unknown">Unknown</option>
+                <option value="little">Little</option>
+                <option value="quite rich">Quite Rich</option>
+                <option value="rich">Rich</option>
+                <option value="moderate">Moderate</option>
+            </select>
+
+            <label for="checkingAccount">Checking Account:</label>
+            <select id="checkingAccount" required>
+                <option value="">Select</option>
+                <option value="little">Little</option>
+                <option value="moderate">Moderate</option>
+                <option value="unknown">Unknown</option>
+                <option value="rich">Rich</option>
+            </select>
+
+            <label for="creditAmount">Credit Amount:</label>
+            <input type="number" id="creditAmount" required>
+
+            <label for="duration">Duration (in months):</label>
+            <input type="number" id="duration" required>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        async function predictLoanDefault() {
+            let data = {
+                "Sex": document.getElementById("sex").value,
+                "Housing": document.getElementById("housing").value,
+                "Saving accounts": document.getElementById("savingAccounts").value,
+                "Checking account": document.getElementById("checkingAccount").value,
+                "Credit amount": parseFloat(document.getElementById("creditAmount").value),
+                "Duration": parseFloat(document.getElementById("duration").value)
+            };
+    
+            let response = await fetch("http://127.0.0.1:5000/predict", {  <!-- corrected this line -->
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+    
+            let result = await response.json();
+            document.getElementById("result").innerHTML = 
+                `Prediction: <strong>${result.default_prediction ? 'High Risk' : 'Low Risk'}</strong><br>
+                Default Probability: <strong>${(result.default_probability * 100).toFixed(2)}%</strong>`;
+        }
+    </script>
+    
+</body>
+</html>
